@@ -9,29 +9,29 @@ export function CustomBuilder(props) {
       <div className="brake-creator">
         <Select
           options={props.levers}
-          labelField="fullName"
-          valueField="code"
+          labelField="name"
+          valueField="lever"
           placeholder="Select lever"
           onChange={props.changeValue.bind(this, 'lever')}
           values={props.customLever}
-          searchBy="fullName"
+          searchBy="name"
           itemRenderer={customItemRenderer}
           contentRenderer={customContentRenderer}
           dropdownHandle={false}
-          dropdownHeight="150px"
+          dropdownHeight="200px"
         />
         <Select
           options={props.calipers}
-          labelField="fullName"
-          valueField="code"
+          labelField="name"
+          valueField="caliper"
           placeholder="Select caliper"
           onChange={props.changeValue.bind(this, 'caliper')}
           values={props.customCaliper}
-          searchBy="fullName"
+          searchBy="name"
           itemRenderer={customItemRenderer}
           contentRenderer={customContentRenderer}
           dropdownHandle={false}
-          dropdownHeight="150px"
+          dropdownHeight="200px"
         />
         <div className="add button" onClick={props.addToBrakes}>Add</div>
       </div>
@@ -42,24 +42,22 @@ export function CustomBuilder(props) {
 function customItemRenderer({ item, itemIndex, props, state, methods }) {
   return (
     <div className="dropdown-select" onClick={() => methods.addItem(item)}>
-      <span className="label">{item.fullName}</span>
-      <span className={`${item.fluid} fluid`}>{item.fluid}</span>
+      <span className="label">{item.brand} {props.valueField === 'lever' ? item.lever : item.caliper}</span>
+      <span className={`${item.oil} fluid`}>{item.oil}</span>
     </div>
 )}
 
 function customContentRenderer({ props, state, methods }) {
-  console.log(state)
-  console.log(props)
   return (
     <div className="dropdown-select">
       <input 
         className="label" 
-        placeholder={state.values.length > 0 ? state.values[0].fullName : props.placeholder}
+        placeholder={state.values.length > 0 ? ( state.values[0].brand + ' ' + (props.valueField === 'lever' ? state.values[0].lever : state.values[0].caliper ) ) : props.placeholder}
         value={state.search}
         onChange={(e)=> methods.setSearch(e)}
         />
       {state.values.length > 0 &&
-        <span className={`${state.values[0].fluid} fluid`}>{state.values[0].fluid}</span>
+        <span className={`${state.values[0].oil} fluid`}>{state.values[0].oil}</span>
       }
     </div>
 )}

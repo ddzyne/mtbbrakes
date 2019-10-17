@@ -1,19 +1,21 @@
 import React from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import {ElementSelector} from './Selectors';
+import Loader from './Loader';
 
 class Chart extends React.Component {
   state = {
     stacked: false,
   }
   render() {
-    const {data,elements} = this.props
-    const {stacked} = this.state
+    const {data,elements,loading} = this.props;
+    const {stacked} = this.state;
+    const fullData = data.concat(this.props.customData).filter( d => d.show );
     return (
       <div className="chart-wrap">
-        <ResponsiveContainer width="100%" height={680}>
+        <Loader loading={loading} position="absolute"/>
+        <ResponsiveContainer width="100%" height={1200}>
           <BarChart
-            data={data}
+            data={fullData}
             margin={{top: 0, right: 0, left: 0, bottom: 0,}}
             barGap={0}
             layout="vertical"
@@ -27,17 +29,17 @@ class Chart extends React.Component {
               el.show && 
               <Bar 
                 stackId={stacked ? 'a' : null} 
-                key={i} 
+                key={el.variable} 
                 dataKey={el.variable} 
                 name={el.name} 
                 fill={el.color} />
             )}
           </BarChart>
         </ResponsiveContainer>
-        <ElementSelector 
+       {/* <ElementSelector 
           name={stacked ? "Unstack bars" : "Stack bars" }
           onClick={()=>this.setState({stacked:!stacked})}
-          visible={stacked}/>
+          visible={stacked}/>*/}
       </div>
     )
   }
@@ -49,8 +51,9 @@ function CustomTooltip({ payload, label, active }) {
   if (active) {
     return (
       <div className="custom-tooltip">
-        <h4 className="label">{`${label}`}</h4>
-        {payload.map( (el, i) =>
+        <h4 className="label">{label ? `${label}` : ''}</h4>
+        {payload && payload.map( (el, i) =>
+          el.value > 0 &&
           <div key={i}>
             <h6>{`${el.name}`}</h6>
             <p>{`${el.value.toFixed(3)}`}</p>
