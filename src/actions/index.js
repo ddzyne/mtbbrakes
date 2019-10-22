@@ -2,7 +2,7 @@ import axios from "axios";
 import { sheetId, sheetPage } from "../helpers/url";
 import { calculateHydro, calculateMechAvg, calculateMechPeak, calculateTotalAvg, calculateTotalPeak } from '../helpers/calc';
 
-export const getBrakes = async (store, request = axios, showColumns = true, showRows = true, useIntegers = true) => {
+export const getBrakes = async (store, request = axios) => {
   const url = 'https://spreadsheets.google.com/feeds/list/' + sheetId + '/' + sheetPage + '/public/values?alt=json';
   const status = "LOADING";
   store.setState({ status });
@@ -15,7 +15,7 @@ export const getBrakes = async (store, request = axios, showColumns = true, show
         if (gsxCheck > -1) {
           const name = key.substring(4);
           const content = el[key];
-          const value = useIntegers === true && !isNaN(content.$t) ? Number(content.$t) : content.$t;
+          const value = !isNaN(content.$t) ? Number(content.$t) : content.$t;
           return {[name]: value};
         }
         return false;
