@@ -1,13 +1,35 @@
 import axios from "axios";
-import { url } from "../helpers/url";
+import { sheetId, sheetPage } from "../helpers/url";
 import { calculateHydro, calculateMechAvg, calculateMechPeak, calculateTotalAvg, calculateTotalPeak } from '../helpers/calc';
 
-export const getBrakes = async (store, request = axios) => {
+export const getBrakes = async (store, request = axios, showColumns = true, showRows = true, useIntegers = true) => {
+  const url = 'https://spreadsheets.google.com/feeds/list/' + sheetId + '/' + sheetPage + '/public/values?alt=json';
   const status = "LOADING";
   store.setState({ status });
   try {
     const response = await request.get(url);
-    const data = response.data.rows.filter( d => d.oil === 'DOT' || d.oil === 'Mineral' );
+    const responseObj = response.data && response.data.feed && response.data.feed.entry && response.data.feed.entry.map( (el, index) => {
+      var keys = Object.keys(el);
+      var newRow = {};
+      for (var j = 0; j < keys.length; j++) {
+        var gsxCheck = keys[j].indexOf('gsx$');
+        if (gsxCheck > -1) {
+          var key = keys[j];
+          var name = key.substring(4);
+          var content = el[key];
+          var value = content.$t;
+          if (useIntegers === true && !isNaN(value)) {
+            value = Number(value);
+          }
+          newRow[name] = value;
+        }
+      }
+      return newRow;
+    });
+    const status = responseObj ? "EMPTY" : "SUCCESS";
+    store.setState({ status });
+
+    const data = responseObj.length > 0 ? responseObj.filter( d => d.oil === 'DOT' || d.oil === 'Mineral' ) : [];
     const brakes = data.map( (b,i) => Object.assign({
       id: `std-brake-${i}`,
       name: `${b.brand} ${ (b.lever === b.caliper || b.caliper.includes(b.lever)) ? b.caliper : b.lever + ' / ' + b.caliper}`,
@@ -18,8 +40,6 @@ export const getBrakes = async (store, request = axios) => {
       levTotPeak: calculateTotalPeak(b,b),
       show: true,
     }, b));
-    const isResultsEmpty = brakes.length === 0;
-    const status = isResultsEmpty ? "EMPTY" : "SUCCESS";
 
     const levers = data.filter( (thing, index, self) =>
       thing.mechanicalleverageaverage > 0 &&
@@ -34,10 +54,10 @@ export const getBrakes = async (store, request = axios) => {
         t.caliper === thing.caliper
       ))
     );
-
-    store.setState({ brakes, status, levers, calipers });
-  } catch (error) {
-    console.log(error)
+    store.setState({ brakes, levers, calipers });
+  }
+  catch (error) {
+    console.log(error);
     const isError404 = error.response && error.response.status === 404;
     const status = isError404 ? "NOT_FOUND" : "ERROR";
     store.setState({ status });

@@ -1,1 +1,2 @@
-export const url = "http://gsx2json.com/api?id=10UF6s2Uvi4TsH0PLEs6b5vnBqcsF7Gx6jpOmMlSix9c&sheet=4&columns=false";
+export const sheetId = "10UF6s2Uvi4TsH0PLEs6b5vnBqcsF7Gx6jpOmMlSix9c";
+export const sheetPage = "4";
