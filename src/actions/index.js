@@ -10,21 +10,21 @@ export const getBrakes = async (store, request = axios, showColumns = true, show
     const response = await request.get(url);
     const responseObj = response.data && response.data.feed && response.data.feed.entry && response.data.feed.entry.map( (el, index) => {
       var keys = Object.keys(el);
-      var newRow = {};
-      for (var j = 0; j < keys.length; j++) {
-        var gsxCheck = keys[j].indexOf('gsx$');
+      const newRow = keys.map( (key) => {
+        const gsxCheck = key.indexOf('gsx$');
         if (gsxCheck > -1) {
-          var key = keys[j];
-          var name = key.substring(4);
-          var content = el[key];
-          var value = content.$t;
-          if (useIntegers === true && !isNaN(value)) {
-            value = Number(value);
-          }
-          newRow[name] = value;
+          const name = key.substring(4);
+          const content = el[key];
+          const value = useIntegers === true && !isNaN(content.$t) ? Number(content.$t) : content.$t;
+          return {[name]: value};
         }
-      }
-      return newRow;
+        return false;
+      });
+      const obj = newRow.reduce((obj, item) => {
+        const key = item && Object.keys(item);
+        return key && {...obj, [key[0]]: item[key[0]]}
+      });
+      return obj;
     });
     const status = responseObj ? "EMPTY" : "SUCCESS";
     store.setState({ status });
