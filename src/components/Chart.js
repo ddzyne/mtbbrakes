@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import Loader from './Loader';
-
-const domain = [0, 50];
+import { standardElements, chartDomain } from '../datasets/default';
+import {ElementSelector} from './Selectors';
 
 const Chart = (props) => {
+  const [stacked, setStacked] = useState(true);
   const {data, elements, loading} = props;
   const fullData = data.concat(props.customData).filter( d => d.show );
   return (
@@ -15,7 +16,8 @@ const Chart = (props) => {
           data={fullData}
           margin={{top: 0, right: 0, left: 0, bottom: 0,}}
           barGap={0}
-          layout="vertical">
+          layout="vertical"
+          barCategoryGap="15%">
           <CartesianGrid strokeDasharray="2 2" stroke="#f1f1f1"/>
           <YAxis 
             type="category" 
@@ -25,7 +27,7 @@ const Chart = (props) => {
           <XAxis 
             stroke="#f1f1f1" 
             type="number"
-            domain={domain} 
+            domain={chartDomain} 
             allowDataOverflow={true} 
             allowDecimals={false}
             ticks={[0,10,20,30,40,50]} />
@@ -34,18 +36,22 @@ const Chart = (props) => {
           {elements.map( (el) =>
             el.show && 
             <Bar 
-              stackId={
-                el.variable === 'levMecPeak' || el.variable === 'levMecAvg' ? 'a' :
-                (el.variable === 'levTotPeak' || el.variable === 'levTotAvg' ? 'b' : null )} 
+              stackId={stacked ? 'a' :
+                (el.variable === 'levMecPeak' || el.variable === 'levMecAvg' ? 'a' :
+                (el.variable === 'levTotPeak' || el.variable === 'levTotAvg' ? 'b' : null ))
+              } 
               key={el.variable} 
               dataKey={el.variable} 
               name={el.name} 
               fill={el.color}
-              shape={<CustomBar/>}
-               />
+              shape={<CustomBar/>} />
           )}
         </BarChart>
       </ResponsiveContainer>
+      <ElementSelector 
+          name={stacked ? "Unstack bars" : "Stack bars" }
+          onClick={()=>setStacked(!stacked)}
+          visible={stacked}/>
     </div>
   )
 }
@@ -79,8 +85,9 @@ const getPath = (x, y, width, height) => {
 
 const CustomBar = (props) => {
   const { background, x, fill, y, width, height, value, payload } = props;
-  //this is dirty, but needed to get better chart scaling
-  const newWidth = fill === '#ff7043' ? payload.levTotAvg * (background.width / domain[1])  : width;
+  //manual width calculation, it's dirty, but needed to get better chart scaling, allowing data overflow without clipping, and stacked bars starting from 0
+  const theElement = standardElements.find( el => el.color === fill);
+  const newWidth = payload[theElement.variable] * (background.width / chartDomain[1]);
   return <path 
     fill={fill}
     d={getPath(x > background.x ? background.x : x,y,newWidth,height)}
