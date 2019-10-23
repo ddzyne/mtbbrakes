@@ -21,6 +21,8 @@ const App = () => {
     ( !isNaN(b.levMecAvg) && isFinite(b.levMecAvg)) &&
     ( !isNaN(b.levHyd) && isFinite(b.levHyd)) );
 
+  const elementsOrdered = [...elements].sort((a,b) => (a.variable > b.variable) ? 1 : ((b.variable > a.variable) ? -1 : 0)); 
+
   return (
     <div className="App">
       <div className="left">
@@ -31,7 +33,7 @@ const App = () => {
         <div className="sidebar">
           <Selector 
             title="Show/hide data" 
-            elements={elements} 
+            elements={elementsOrdered} 
             toggleData={globalActions.toggleElement}
             stateSelector="elements" />
           <Selector 

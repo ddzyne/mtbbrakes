@@ -23,12 +23,12 @@ const Chart = (props) => {
           <XAxis 
             stroke="#f1f1f1" 
             type="number"
-            domain={[0, 50]} 
-            allowDataOverflow={true} 
+            domain={[0, 60]} 
+            allowDataOverflow={false} 
             allowDecimals={false}
-            ticks={[0,10,20,30,40,50]} />
+            ticks={[0,10,20,30,40,50,60,70]} />
           <Tooltip cursor={{fill: 'rgba(255,255,255,.3)'}} content={<CustomTooltip/>} />
-          <Legend />
+          <Legend content={<CustomLegend/>}/>
           {elements.map( (el) =>
             el.show && 
             <Bar 
@@ -73,9 +73,25 @@ const getPath = (x, y, width, height) => {
 
 const CustomBar = (props) => {
   const { background, x, fill, y, width, height } = props;
-  const widthMod = x > background.x && width > 0 ? width - x + background.x : width;
   return <path 
     fill={fill}
-    d={getPath(x,y,widthMod,height)}
+    d={getPath(x > background.x ? background.x : x,y,width,height)}
     />;
 };
+
+const CustomLegend = (props) => {
+  const { payload } = props;
+  const payloadOrdered = payload.sort((a,b) => (a.dataKey > b.dataKey) ? 1 : ((b.dataKey > a.dataKey) ? -1 : 0)); 
+  return (
+    <div className="legend">
+      {
+        payloadOrdered.map((entry, index) => (
+          <span className="item" key={`item-${index}`}>
+            <span className="color" style={{'backgroundColor': entry.color}}/>
+            <span className="label">{entry.value}</span>
+          </span>
+        ))
+      }
+    </div>
+  );
+}

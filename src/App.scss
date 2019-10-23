@@ -223,6 +223,9 @@ input {
   user-select: none;
   margin-right:10px;
 }
+.label {
+  flex:1;
+}
 .tgl-btn:after,
 .tgl-btn:before {
       position: relative;
@@ -277,6 +280,26 @@ input {
     right: 0;
     bottom:0;
     position:absolute;
+  }
+}
+
+//legend
+.legend {
+  margin-top: 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  font-size: .8rem;
+  justify-content: center;
+  .item {
+    display: flex;
+    align-items:center;
+    margin:.25rem .5rem;
+    .color {
+      width: .8rem;
+      height: .8rem;
+      margin-right: .25rem;
+      border-radius:3px;
+    }
   }
 }
 
