@@ -1,4 +1,5 @@
 import React from 'react';
+import {Github} from '../images/Svg'
 
 export const Intro = (props) => {
   return (
@@ -15,8 +16,9 @@ export const Copyright = (props) => {
   return (
     <div className="copyright">
       <h4>Copyrights</h4>
-      <p>Brake data collected by <a href="https://ridemonkey.bikemag.com/threads/frankenbrakes-and-brake-improvement-discussion.274164/" target="_blank" rel="noopener noreferrer">Udi on RideMonkey</a></p>
-      <p>Visualisation tool created by <a href="https://ddzyne.nl" target="_blank" rel="noopener noreferrer">Ddzyne</a></p>
+      <p>Brake data collected by<br/><a href="https://ridemonkey.bikemag.com/threads/frankenbrakes-and-brake-improvement-discussion.274164/" target="_blank" rel="noopener noreferrer">Udi on RideMonkey</a></p>
+      <p>Visualisation tool created by<br/><a href="https://ddzyne.nl" target="_blank" rel="noopener noreferrer">Ddzyne</a></p>
+      <a href="https://github.com/daancjanssen/mtbbrakes" target="_blank" rel="noopener noreferrer" title="Source code on Github"><Github/></a>
     </div>
   )
 }

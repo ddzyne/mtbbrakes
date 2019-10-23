@@ -26,7 +26,7 @@ strong {
   background: $black;
   padding:1rem 1.5rem;
   margin:1rem;
-  border-radius: 1rem;
+  border-radius: .4rem;
 }
 
 .sidebar {
@@ -51,6 +51,12 @@ h1,h2,h3,h4,h5,h6 {
 
 a {
   color:$green;
+  text-decoration: none;
+  font-weight: 700;
+  transition:all .2s ease;
+  &:hover {
+    color:darken($green,10%);
+  }
 }
 
 p {
@@ -85,20 +91,22 @@ p {
 
 .copyright {
   @extend .block;
+  position:relative;
+  overflow: hidden;
   margin:1rem 1rem 1rem 0;
   @media only screen and (max-width: 800px) {
     margin:0 1rem 1rem 1rem;
   }
   p {
     font-size: .8rem;
-    margin-bottom: .3rem;
+    margin-bottom: .5rem;
   }
 }
 
 //charts
 .custom-tooltip {
   background: $bg;
-  border-radius: 1rem;
+  border-radius: .4rem;
   padding:1rem 2rem;
   box-shadow:3px 3px 10px rgba(0,0,0,.3);
   h4 {
@@ -241,7 +249,7 @@ input {
   transition: all .2s ease;
   background: $white;
   border: 3px solid #b9b9b9;
-  border-radius: .6rem;
+  border-radius: .4rem;
 }
 .tgl-flat .tgl-btn:after {
   transition: all .2s ease;
@@ -310,4 +318,35 @@ $duration: 1.4s;
    stroke-dashoffset: $offset;
    transform:rotate(450deg);
  }
+}
+
+//github wave
+.github-corner:hover .octo-arm {
+  animation: octocat-wave 560ms ease-in-out;
+}
+
+@keyframes octocat-wave {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    20% {
+        transform: rotate(-25deg);
+    }
+
+    40% {
+        transform: rotate(10deg);
+    }
+
+    60% {
+        transform: rotate(-25deg);
+    }
+
+    80% {
+        transform: rotate(10deg);
+    }
+
+    100% {
+        transform: rotate(0deg);
+    }
 }
