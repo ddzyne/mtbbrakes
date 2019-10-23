@@ -1,6 +1,6 @@
 import React from 'react';
 
-export function Intro(props) {
+export const Intro = (props) => {
   return (
     <div className="intro">
       <h1>Mountain bike brake force visualisation</h1>
@@ -11,7 +11,7 @@ export function Intro(props) {
   )
 }
 
-export function Copyright(props) {
+export const Copyright = (props) => {
   return (
     <div className="copyright">
       <h4>Copyrights</h4>

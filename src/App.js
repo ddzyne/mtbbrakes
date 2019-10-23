@@ -8,7 +8,7 @@ import { Intro, Copyright } from './components/Text';
 import 'sanitize.css';
 import './App.scss';
 
-function App() {
+const App = () => {
   const [globalState, globalActions] = useGlobal();
 
   useEffect(() => {
@@ -61,7 +61,7 @@ function App() {
   )
 }
 
-function Selector(props) {
+const Selector = (props) => {
   return (
     <div className="selector-wrap">
       {props.title && <h2>{props.title}</h2>}

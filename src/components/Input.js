@@ -1,7 +1,7 @@
 import React from 'react';
 import Select from 'react-dropdown-select';
 
-export function CustomBuilder(props) {
+export const CustomBuilder = (props) => {
   return (
     <div className="selector-wrap">
       <h2>{props.title}</h2>
@@ -39,7 +39,7 @@ export function CustomBuilder(props) {
   )
 }
 
-function customItemRenderer({ item, itemIndex, props, state, methods }) {
+const customItemRenderer = ({ item, itemIndex, props, state, methods }) => {
   return (
     <div className="dropdown-select" onClick={() => methods.addItem(item)}>
       <span className="label">{item.brand} {props.valueField === 'lever' ? item.lever : item.caliper}</span>
@@ -47,7 +47,7 @@ function customItemRenderer({ item, itemIndex, props, state, methods }) {
     </div>
 )}
 
-function customContentRenderer({ props, state, methods }) {
+const customContentRenderer = ({ props, state, methods }) => {
   return (
     <div className="dropdown-select">
       <input 

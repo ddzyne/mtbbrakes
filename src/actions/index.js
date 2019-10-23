@@ -18,7 +18,7 @@ export const getBrakes = async (store, request = axios) => {
           const value = !isNaN(content.$t) ? Number(content.$t) : content.$t;
           return {[name]: value};
         }
-        return false;
+        return null;
       });
       const obj = newRow.reduce((obj, item) => {
         const key = item && Object.keys(item);
@@ -35,20 +35,20 @@ export const getBrakes = async (store, request = axios) => {
       name: `${b.brand} ${ (b.lever === b.caliper || b.caliper.includes(b.lever)) ? b.caliper : b.lever + ' / ' + b.caliper}`,
       levHyd: calculateHydro(b,b),
       levMecAvg: calculateMechAvg(b),
-      levMecPeak: calculateMechPeak(b),
+      ...( calculateMechPeak(b) > 0 && {levMecPeak: calculateMechPeak(b)}),
       levTotAvg: calculateTotalAvg(b,b),
-      levTotPeak: calculateTotalPeak(b,b),
+      ...( calculateTotalPeak(b,b) > 0 && {levTotPeak: calculateTotalPeak(b,b)}),
       show: true,
     }, b));
 
-    const levers = data.filter( (thing, index, self) =>
+    const levers = brakes.filter( (thing, index, self) =>
       thing.mechanicalleverageaverage > 0 &&
       index === self.findIndex((t) => (
         t.lever === thing.lever
       ))
     );
 
-    const calipers = data.filter( (thing, index, self) =>
+    const calipers = brakes.filter( (thing, index, self) =>
       thing.slave1 > 0 &&
       index === self.findIndex((t) => (
         t.caliper === thing.caliper
