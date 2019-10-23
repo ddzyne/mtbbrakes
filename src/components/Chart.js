@@ -2,6 +2,8 @@ import React from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import Loader from './Loader';
 
+const domain = [0, 50];
+
 const Chart = (props) => {
   const {data, elements, loading} = props;
   const fullData = data.concat(props.customData).filter( d => d.show );
@@ -23,10 +25,10 @@ const Chart = (props) => {
           <XAxis 
             stroke="#f1f1f1" 
             type="number"
-            domain={[0, 60]} 
-            allowDataOverflow={false} 
+            domain={domain} 
+            allowDataOverflow={true} 
             allowDecimals={false}
-            ticks={[0,10,20,30,40,50,60,70]} />
+            ticks={[0,10,20,30,40,50]} />
           <Tooltip cursor={{fill: 'rgba(255,255,255,.3)'}} content={<CustomTooltip/>} />
           <Legend content={<CustomLegend/>}/>
           {elements.map( (el) =>
@@ -51,14 +53,18 @@ const Chart = (props) => {
 export default Chart;
 
 const CustomTooltip = ({ payload, label, active }) => {
+  const payloadOrdered = payload.sort((a,b) => (a.dataKey > b.dataKey) ? 1 : ((b.dataKey > a.dataKey) ? -1 : 0)); 
   if (active) {
     return (
       <div className="custom-tooltip">
         <h4 className="label">{label ? `${label}` : ''}</h4>
-        {payload && payload.map( (el, i) =>
-          <div key={i}>
-            <h6>{`${el.name}`}</h6>
-            <p>{`${el.value.toFixed(3)}`}</p>
+        {payloadOrdered && payloadOrdered.map( (el, i) =>
+          <div key={i} className="item-wrap">
+            <span className="color" style={{'backgroundColor': el.color}}/>
+            <div>
+              <h6>{`${el.name}`}</h6>
+              <p>{`${el.value.toFixed(3)}`}</p>
+            </div>
           </div>
         )}
       </div>
@@ -72,10 +78,12 @@ const getPath = (x, y, width, height) => {
 };
 
 const CustomBar = (props) => {
-  const { background, x, fill, y, width, height } = props;
+  const { background, x, fill, y, width, height, value, payload } = props;
+  //this is dirty, but needed to get better chart scaling
+  const newWidth = fill === '#ff7043' ? payload.levTotAvg * (background.width / domain[1])  : width;
   return <path 
     fill={fill}
-    d={getPath(x > background.x ? background.x : x,y,width,height)}
+    d={getPath(x > background.x ? background.x : x,y,newWidth,height)}
     />;
 };
 
