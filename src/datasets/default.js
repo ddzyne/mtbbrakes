@@ -1,4 +1,4 @@
-export const colors = ['#e53935', '#ff7043', '#00796b', '#26a69a', '#5c6bc0'];
+export const colors = ['#e53935', '#ff7043', '#00796b', '#26a69a', '#5c6bc0', '#fbc02d'];
 
 export const chartDomain = [0,50];
 

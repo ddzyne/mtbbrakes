@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Label } from 'recharts';
 import Loader from './Loader';
-import { standardElements, chartDomain } from '../datasets/default';
+import { standardElements, chartDomain, colors } from '../datasets/default';
 import {ElementSelector} from './Selectors';
 
 const Chart = (props) => {
@@ -14,7 +14,7 @@ const Chart = (props) => {
       <ResponsiveContainer width="100%" height={1200}>
         <BarChart
           data={fullData}
-          margin={{top: 0, right: 0, left: 0, bottom: 0,}}
+          margin={{top: 10, right: 0, left: 0, bottom: 0,}}
           barGap={0}
           layout="vertical"
           barCategoryGap="15%">
@@ -25,12 +25,24 @@ const Chart = (props) => {
             stroke="#f1f1f1" 
             tick={{fontSize: 11}}/>
           <XAxis 
-            stroke="#f1f1f1" 
+            stroke={colors[0]} 
             type="number"
             domain={chartDomain} 
             allowDataOverflow={true} 
             allowDecimals={false}
-            ticks={[0,10,20,30,40,50]} />
+            ticks={[0,10,20,30,40,50]}
+            xAxisId="top" 
+            orientation="top">
+            <Label value="Leverage" offset={0} position="top" />
+          </XAxis>
+          <XAxis 
+            stroke={colors[5]} 
+            type="number"
+            allowDecimals={false}
+            xAxisId="bottom" 
+            orientation="bottom">
+            <Label value="Weight per side without hose (g)" offset={0} position="bottom" />
+          </XAxis>
           <Tooltip cursor={{fill: 'rgba(255,255,255,.3)'}} content={<CustomTooltip/>} />
           <Legend content={<CustomLegend/>}/>
           {elements.map( (el) =>
@@ -44,8 +56,16 @@ const Chart = (props) => {
               dataKey={el.variable} 
               name={el.name} 
               fill={el.color}
-              shape={<CustomBar/>} />
+              shape={<CustomBar/>}
+              xAxisId="top"
+              barSize={20} />
           )}
+          <Bar 
+            dataKey="totalweight"
+            name="Weight (no hose, per side)" 
+            fill={colors[5]}
+            xAxisId="bottom"
+            barSize={10} />
         </BarChart>
       </ResponsiveContainer>
       <ElementSelector 
@@ -69,7 +89,7 @@ const CustomTooltip = ({ payload, label, active }) => {
             <span className="color" style={{'backgroundColor': el.color}}/>
             <div>
               <h6>{`${el.name}`}</h6>
-              <p>{`${el.value.toFixed(3)}`}</p>
+              <p>{el.dataKey === 'totalweight' ? (el.value > 0 ? `${el.value} g` : 'N/A') : `${el.value.toFixed(2)}`}</p>
             </div>
           </div>
         )}

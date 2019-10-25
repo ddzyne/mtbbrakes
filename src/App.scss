@@ -295,9 +295,15 @@ input {
   }
 }
 
+.recharts-label {
+  tspan {
+    font-size: .9rem;
+  }
+}
+
 //legend
 .legend {
-  margin-top: 1rem;
+  margin-top: 2rem;
   display: flex;
   flex-wrap: wrap;
   font-size: .8rem;
