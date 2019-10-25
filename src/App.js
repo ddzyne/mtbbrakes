@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react';
 import useGlobal from "./store";
 import Chart from './components/Chart';
-import { ElementSelector } from './components/Selectors';
+import { Selector } from './components/Selectors';
 import { CustomBuilder } from './components/Input';
 import Loader from './components/Loader';
 import { Intro, Copyright } from './components/Text';
@@ -15,27 +15,33 @@ const App = () => {
     globalActions.getBrakes();
   }, [globalActions]);
 
-  const { brakes, levers, calipers, elements, customBrakes, customLever, customCaliper, status } = globalState;
+  const { brakes, levers, calipers, elements, secondaryElements, customBrakes, customLever, customCaliper, status } = globalState;
 
   const visibleBrakes = brakes.filter( b => 
     ( !isNaN(b.levMecAvg) && isFinite(b.levMecAvg)) &&
     ( !isNaN(b.levHyd) && isFinite(b.levHyd)) );
 
   const elementsOrdered = [...elements].sort((a,b) => (a.variable > b.variable) ? 1 : ((b.variable > a.variable) ? -1 : 0)); 
-
   return (
     <div className="App">
       <div className="left">
         <Intro />
-        <Chart data={visibleBrakes} customData={customBrakes} elements={elements} loading={status === 'LOADING'}/>
+        <Chart 
+          data={visibleBrakes} 
+          customData={customBrakes} 
+          elements={elements} 
+          secondaryElements={secondaryElements}
+          loading={status === 'LOADING'}/>
       </div>
       <div className="right">
         <div className="sidebar">
           <Selector 
             title="Show/hide data" 
             elements={elementsOrdered} 
+            secondaryElements={secondaryElements}
             toggleData={globalActions.toggleElement}
-            stateSelector="elements" />
+            stateSelector="elements"
+            secondaryStateSelector="secondaryElements" />
           <Selector 
             title="Some standard brakes" 
             elements={visibleBrakes} 
@@ -59,24 +65,6 @@ const App = () => {
         </div>
         <Copyright/>
       </div>
-    </div>
-  )
-}
-
-const Selector = (props) => {
-  return (
-    <div className="selector-wrap">
-      {props.title && <h2>{props.title}</h2>}
-      <Loader loading={props.loading} />
-      {props.elements.map( (el, i) => {
-        return (
-          <ElementSelector 
-            key={i}
-            name={el.name} 
-            onClick={props.toggleData.bind(this, el, props.stateSelector)}
-            visible={el.show}/>
-        )}
-      )}
     </div>
   )
 }

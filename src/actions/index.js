@@ -66,6 +66,7 @@ export const getBrakes = async (store, request = axios) => {
 
 export const toggleElement = (store, element, stateSelector) => {
   const nextElements = store.state[stateSelector].map( el => {
+    console.log(el)
     if ( element.hasOwnProperty('id') && el.id !== element.id ) return el;
     if ( el.variable !== element.variable ) return el;
     return {

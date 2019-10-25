@@ -1,4 +1,32 @@
 import React from 'react';
+import Loader from './Loader';
+
+export const Selector = (props) => {
+  return (
+    <div className="selector-wrap">
+      {props.title && <h2>{props.title}</h2>}
+      <Loader loading={props.loading} />
+      {props.elements && props.elements.map( (el, i) => {
+        return (
+          <ElementSelector 
+            key={i}
+            name={el.name} 
+            onClick={props.toggleData.bind(this, el, props.stateSelector)}
+            visible={el.show}/>
+        )}
+      )}
+      {props.secondaryElements && props.secondaryElements.map( (el, i) => {
+        return (
+          <ElementSelector 
+            key={i}
+            name={el.name} 
+            onClick={props.toggleData.bind(this, el, props.secondaryStateSelector)}
+            visible={el.show}/>
+        )}
+      )}
+    </div>
+  )
+}
 
 export const ElementSelector = (props) => {
   return (

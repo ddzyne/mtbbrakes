@@ -6,7 +6,7 @@ import {ElementSelector} from './Selectors';
 
 const Chart = (props) => {
   const [stacked, setStacked] = useState(true);
-  const {data, elements, loading} = props;
+  const {data, elements, secondaryElements, loading} = props;
   const fullData = data.concat(props.customData).filter( d => d.show );
   return (
     <div className="chart-wrap">
@@ -25,7 +25,7 @@ const Chart = (props) => {
             stroke="#f1f1f1" 
             tick={{fontSize: 11}}/>
           <XAxis 
-            stroke={colors[0]} 
+            stroke={colors[1]} 
             type="number"
             domain={chartDomain} 
             allowDataOverflow={true} 
@@ -58,14 +58,18 @@ const Chart = (props) => {
               fill={el.color}
               shape={<CustomBar/>}
               xAxisId="top"
-              barSize={20} />
+              barSize={secondaryElements.find(e => e.show) ? 25 : null} />
           )}
-          <Bar 
-            dataKey="totalweight"
-            name="Weight (no hose, per side)" 
-            fill={colors[5]}
-            xAxisId="bottom"
-            barSize={10} />
+          {secondaryElements.map( (el) =>
+            el.show &&
+            <Bar 
+              key={el.variable} 
+              dataKey={el.variable}
+              name={el.longName ? el.longName : el.name}
+              fill={el.color}
+              xAxisId="bottom"
+              barSize={elements.find(e => e.show) ? 10 : null} />
+          )}
         </BarChart>
       </ResponsiveContainer>
       <ElementSelector 
@@ -104,7 +108,7 @@ const getPath = (x, y, width, height) => {
 };
 
 const CustomBar = (props) => {
-  const { background, x, fill, y, width, height, value, payload } = props;
+  const { background, x, fill, y, height, payload } = props;
   //manual width calculation, it's dirty, but needed to get better chart scaling, allowing data overflow without clipping, and stacked bars starting from 0
   const theElement = standardElements.find( el => el.color === fill);
   const newWidth = payload[theElement.variable] * (background.width / chartDomain[1]);

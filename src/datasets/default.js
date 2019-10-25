@@ -9,3 +9,7 @@ export const standardElements = [
   {variable: 'levMecAvg', name: 'Mechanical leverage', color: colors[3], show: true},
   {variable: 'levHyd', name: 'Hydraulic leverage', color: colors[4], show: true},
 ];
+
+export const secondaryElements = [
+  {variable: 'totalweight', name: 'Weight', longName: 'Weight per side without hose', color: colors[5], show: true,}
+];
