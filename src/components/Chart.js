@@ -3,17 +3,23 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsive
 import Loader from './Loader';
 import { standardElements, chartDomain, colors } from '../datasets/default';
 import {ElementSelector} from './Selectors';
+import {Sort} from './Input';
+import useGlobal from "../store";
 
 const Chart = (props) => {
+  const [globalState] = useGlobal();
   const [stacked, setStacked] = useState(true);
+  const {sortBy} = globalState;
   const {data, elements, secondaryElements, loading} = props;
   const fullData = data.concat(props.customData).filter( d => d.show );
+  const dataOrdered = sortBy !== '' ? [...fullData].sort((a,b) => (a[sortBy] > b[sortBy]) ? 1 : ((b[sortBy] > a[sortBy]) ? -1 : 0)) : fullData; 
   return (
     <div className="chart-wrap">
       <Loader loading={loading} position="absolute"/>
+      <Sort />
       <ResponsiveContainer width="100%" height={1200}>
         <BarChart
-          data={fullData}
+          data={dataOrdered}
           margin={{top: 10, right: 0, left: 0, bottom: 0,}}
           barGap={0}
           layout="vertical"

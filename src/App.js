@@ -3,7 +3,6 @@ import useGlobal from "./store";
 import Chart from './components/Chart';
 import { Selector } from './components/Selectors';
 import { CustomBuilder } from './components/Input';
-import Loader from './components/Loader';
 import { Intro, Copyright } from './components/Text';
 import 'sanitize.css';
 import './App.scss';
@@ -31,7 +30,7 @@ const App = () => {
           customData={customBrakes} 
           elements={elements} 
           secondaryElements={secondaryElements}
-          loading={status === 'LOADING'}/>
+          loading={status === 'LOADING'} />
       </div>
       <div className="right">
         <div className="sidebar">

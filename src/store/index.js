@@ -15,6 +15,7 @@ const initialState = {
   levers: [],
   calipers: [],
   status: 'LOADING',
+  sortBy: '',
 };
 
 const useGlobal = useGlobalHook(React, initialState, actions);

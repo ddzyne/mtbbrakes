@@ -1,5 +1,8 @@
 import React from 'react';
 import Select from 'react-dropdown-select';
+import { sortBy } from '../datasets/default';
+import useGlobal from "../store";
+
 
 export const CustomBuilder = (props) => {
   return (
@@ -59,5 +62,44 @@ const customContentRenderer = ({ props, state, methods }) => {
       {state.values.length > 0 &&
         <span className={`${state.values[0].oil} fluid`}>{state.values[0].oil}</span>
       }
+    </div>
+)}
+
+export const Sort = (props) => {
+  const [globalState, globalActions] = useGlobal();
+  return (
+    <div className="sort">
+      <h5>Sort by</h5>
+      <Select
+        className="sort-by"
+        options={sortBy}
+        placeholder="Default"
+        labelField="name"
+        valueField="variable"
+        searchBy="name"
+        searchable={false}
+        onChange={globalActions.sortData}
+        contentRenderer={customContentRendererSort}
+        dropdownHandle={false}
+        itemRenderer={customItemRendererSort} />
+      </div>
+  )
+}
+
+const customContentRendererSort = ({ props, state, methods }) => {
+  return (
+    <div className="dropdown-select sort-drop">
+      <input 
+        className="label" 
+        placeholder={state.values.length > 0 ? state.values[0].name : props.placeholder}
+        value={state.search}
+        onChange={(e)=> methods.setSearch(e)} />
+    </div>
+)}
+
+const customItemRendererSort = ({ item, itemIndex, props, state, methods }) => {
+  return (
+    <div className="dropdown-select sort-drop" onClick={() => methods.addItem(item)}>
+      <span className="label">{item.name}</span>
     </div>
 )}
