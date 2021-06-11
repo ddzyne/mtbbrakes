@@ -135,7 +135,7 @@ p {
 //dropdown
 .mixmatch {
   flex:1;
-  .selector-wrap {
+  .selector-wrap:first-of-type {
     margin:0;
   }
 }
