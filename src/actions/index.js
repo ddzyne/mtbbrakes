@@ -40,6 +40,7 @@ export const getBrakes = async (store, request = axios) => {
       ...( calculateTotalPeak(b,b) > 0 && {levTotPeak: calculateTotalPeak(b,b)}),
       levTotMax: -1 * ( calculateTotalPeak(b,b) > 0 ? calculateTotalPeak(b,b) : calculateTotalAvg(b,b) ),
       show: true,
+      custom: false,
     }, b));
 
     const levers = brakes.filter( (thing, index, self) =>
@@ -96,6 +97,7 @@ export const addToBrakes = (store) => {
       levTotPeak: calculateTotalPeak(customCaliper,customLever),
       levTotMax: -1 * ( calculateTotalPeak(customCaliper,customLever) > 0 ? calculateTotalPeak(customCaliper,customLever) : calculateTotalAvg(customCaliper,customLever) ),
       show: true,
+      custom: true,
     }
     const customBrakes = [...store.state.customBrakes, newBrake]
     store.setState({ customBrakes, customCaliper:[], customLever:[] });

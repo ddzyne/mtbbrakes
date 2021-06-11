@@ -73,7 +73,7 @@ export const Sort = (props) => {
       <Select
         className="sort-by"
         options={sortBy}
-        placeholder="Default"
+        placeholder="Strongest brake first"
         labelField="name"
         valueField="variable"
         searchBy="name"

@@ -41,12 +41,6 @@ const App = () => {
             toggleData={globalActions.toggleElement}
             stateSelector="elements"
             secondaryStateSelector="secondaryElements" />
-          <Selector 
-            title="Some standard brakes" 
-            elements={visibleBrakes} 
-            toggleData={globalActions.toggleElement}
-            stateSelector="brakes" 
-            loading={status === 'LOADING'}/>
           <div className="mixmatch">
             <CustomBuilder 
               title="Mix & match brakes" 
@@ -60,7 +54,13 @@ const App = () => {
               elements={customBrakes} 
               toggleData={globalActions.toggleElement}
               stateSelector="customBrakes" />
-          </div>          
+          </div>  
+          <Selector 
+            title="Some standard brakes" 
+            elements={visibleBrakes} 
+            toggleData={globalActions.toggleElement}
+            stateSelector="brakes" 
+            loading={status === 'LOADING'}/>        
         </div>
         <Copyright/>
       </div>

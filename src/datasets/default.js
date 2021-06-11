@@ -15,7 +15,6 @@ export const secondaryElements = [
 ];
 
 export const sortBy = [
-  {name: 'Default', variable: ''},
   {name: 'Strongest brake first', variable: 'levTotMax'},
   {name: 'Lightest brake first', variable: 'totalweight'},
 ];

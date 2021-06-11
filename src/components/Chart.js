@@ -139,4 +139,4 @@ const CustomLegend = (props) => {
       }
     </div>
   );
-}
+};
