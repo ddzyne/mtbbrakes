@@ -34,13 +34,6 @@ const App = () => {
       </div>
       <div className="right">
         <div className="sidebar">
-          <Selector 
-            title="Show/hide data" 
-            elements={elementsOrdered} 
-            secondaryElements={secondaryElements}
-            toggleData={globalActions.toggleElement}
-            stateSelector="elements"
-            secondaryStateSelector="secondaryElements" />
           <div className="mixmatch">
             <CustomBuilder 
               title="Mix & match brakes" 
@@ -60,7 +53,14 @@ const App = () => {
             elements={visibleBrakes} 
             toggleData={globalActions.toggleElement}
             stateSelector="brakes" 
-            loading={status === 'LOADING'}/>        
+            loading={status === 'LOADING'}/>
+          <Selector 
+            title="Show/hide data" 
+            elements={elementsOrdered} 
+            secondaryElements={secondaryElements}
+            toggleData={globalActions.toggleElement}
+            stateSelector="elements"
+            secondaryStateSelector="secondaryElements" /> 
         </div>
         <Copyright/>
       </div>

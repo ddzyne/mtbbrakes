@@ -10,13 +10,13 @@ export function calculateHydro(caliper, lever) {
 
 export function calculateMechAvg(lever) {
   const mechLevAvg = lever.middledistance / lever.max;
-  const filledInLeverageAverage =  lever.mechanicalleverageaverage > 0 && lever.mechanicalleverageaverage;
+  const filledInLeverageAverage =  lever.mechanicalLeverageAverage > 0 && lever.mechanicalLeverageAverage;
   return filledInLeverageAverage ? filledInLeverageAverage : mechLevAvg;
 }
 
 export function calculateMechPeak(lever) {
   const mechLevPeak = lever.middledistance / lever.min;
-  const filledInLeveragePeak =  lever.mechanicalleveragepeak > 0 && lever.mechanicalleveragepeak;
+  const filledInLeveragePeak =  lever.mechanicalLeveragePeak > 0 && lever.mechanicalLeveragePeak;
   return filledInLeveragePeak ? filledInLeveragePeak : ( mechLevPeak > 0 && isFinite(mechLevPeak) ? mechLevPeak : 0 );
 }
 
@@ -26,4 +26,10 @@ export function calculateTotalAvg(caliper, lever) {
 
 export function calculateTotalPeak(caliper, lever) {
   return calculateHydro(caliper, lever) * calculateMechPeak(lever);
+}
+
+export function camelCase(str) {
+  return str.replace(/(?:^\w|[A-Z]|\b\w)/g,
+    (word, index) => index === 0 ? word.toLowerCase() : word.toUpperCase()
+  ).replace(/\s+/g, '');
 }

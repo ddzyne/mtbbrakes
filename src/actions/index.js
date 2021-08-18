@@ -1,36 +1,31 @@
 import axios from "axios";
-import { sheetId, sheetPage } from "../helpers/url";
+import { googleUrl, sheetId, sheetPage } from "../helpers/url";
+import { camelCase } from "../helpers/calc";
 import { calculateHydro, calculateMechAvg, calculateMechPeak, calculateTotalAvg, calculateTotalPeak } from '../helpers/calc';
 
 export const getBrakes = async (store, request = axios) => {
-  const url = 'https://spreadsheets.google.com/feeds/list/' + sheetId + '/' + sheetPage + '/public/values?alt=json';
+  const url = googleUrl + sheetId + '/values/' + sheetPage + '?key=' + process.env.REACT_APP_API_KEY;
   const status = "LOADING";
   store.setState({ status });
   try {
     const response = await request.get(url);
-    const responseObj = response.data && response.data.feed && response.data.feed.entry && response.data.feed.entry.map( (el, index) => {
-      var keys = Object.keys(el);
-      const newRow = keys.map( (key) => {
-        const gsxCheck = key.indexOf('gsx$');
-        if (gsxCheck > -1) {
-          const name = key.substring(4);
-          const content = el[key];
-          const value = !isNaN(content.$t) ? Number(content.$t) : content.$t;
-          return {[name]: value};
-        }
-        return null;
-      });
-      const obj = newRow.reduce((obj, item) => {
-        const key = item && Object.keys(item);
-        return key && {...obj, [key[0]]: item[key[0]]}
-      });
-      return obj;
+    const responseObj = response.data && response.data.values && response.data.values.map( 
+      (el, index) => {
+        // headers are the 3rd row in the Google sheet
+        const arr = response.data.values[2].map( (header, i) => { 
+          return { [camelCase(header)]: el[i] } 
+        });
+        return arr.reduce((obj, item) => {
+          const key = item && Object.keys(item);
+          return key && {...obj, [key[0]]: item[key[0]]}
+        });
     });
+
     const status = responseObj ? "EMPTY" : "SUCCESS";
     store.setState({ status });
 
     const data = responseObj.length > 0 ? responseObj.filter( d => d.oil === 'DOT' || d.oil === 'Mineral' ) : [];
-    const brakes = data.map( (b,i) => Object.assign({
+    const brakes = data.map( ( b, i ) => Object.assign({
       id: `std-brake-${i}`,
       name: `${b.brand} ${ (b.lever === b.caliper || b.caliper.includes(b.lever)) ? b.caliper : b.lever + ' / ' + b.caliper}`,
       levHyd: calculateHydro(b,b),
@@ -41,21 +36,16 @@ export const getBrakes = async (store, request = axios) => {
       levTotMax: -1 * ( calculateTotalPeak(b,b) > 0 ? calculateTotalPeak(b,b) : calculateTotalAvg(b,b) ),
       show: true,
       custom: false,
-    }, b));
+    }, b ));
 
     const levers = brakes.filter( (thing, index, self) =>
-      thing.mechanicalleverageaverage > 0 &&
-      index === self.findIndex((t) => (
-        t.lever === thing.lever
-      ))
+      thing.mechanicalLeverageAverage > 0 && index === self.findIndex( t => t.lever === thing.lever )
     );
 
     const calipers = brakes.filter( (thing, index, self) =>
-      thing.slave1 > 0 &&
-      index === self.findIndex((t) => (
-        t.caliper === thing.caliper
-      ))
+      thing.slave1 > 0 && index === self.findIndex( t => t.caliper === thing.caliper )
     );
+
     store.setState({ brakes, levers, calipers });
   }
   catch (error) {
@@ -89,7 +79,7 @@ export const addToBrakes = (store) => {
           customCaliper = store.state.customCaliper[0];
     const newBrake = {
       id: `cst-brake-${customLever.lever}-${customCaliper.caliper}`,
-      name: `${customLever.brand} ${customLever.lever} / ${customCaliper.brand} ${customCaliper.caliper}`,
+      name: `${customLever.brand} ${customLever.lever} / ${customCaliper.brand} ${customCaliper.caliper} (custom)`,
       levHyd: calculateHydro(customCaliper, customLever),
       levMecAvg: calculateMechAvg(customLever),
       levMecPeak: calculateMechPeak(customLever),
@@ -98,8 +88,8 @@ export const addToBrakes = (store) => {
       levTotMax: -1 * ( calculateTotalPeak(customCaliper,customLever) > 0 ? calculateTotalPeak(customCaliper,customLever) : calculateTotalAvg(customCaliper,customLever) ),
       show: true,
       custom: true,
-    }
-    const customBrakes = [...store.state.customBrakes, newBrake]
+    };
+    const customBrakes = [...store.state.customBrakes, newBrake];
     store.setState({ customBrakes, customCaliper:[], customLever:[] });
   }
 }

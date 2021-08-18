@@ -11,10 +11,10 @@ export const standardElements = [
 ];
 
 export const secondaryElements = [
-  {variable: 'totalweight', name: 'Weight', longName: 'Weight per side without hose', color: colors[5], show: true,}
+  {variable: 'totalWithoutHose', name: 'Weight', longName: 'Weight per side without hose', color: colors[5], show: true,}
 ];
 
 export const sortBy = [
   {name: 'Strongest brake first', variable: 'levTotMax'},
-  {name: 'Lightest brake first', variable: 'totalweight'},
+  {name: 'Lightest brake first', variable: 'totalWithoutHose'},
 ];

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Label } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Label, Text } from 'recharts';
 import Loader from './Loader';
 import { standardElements, chartDomain, colors } from '../datasets/default';
 import {ElementSelector} from './Selectors';
@@ -28,8 +28,10 @@ const Chart = (props) => {
           <YAxis 
             type="category" 
             dataKey="name" 
-            stroke="#f1f1f1" 
-            tick={{fontSize: 11}}/>
+            stroke="#f1f1f1"
+            width={100}
+            tickMargin={5}
+            tick=<CustomizedTick/> />
           <XAxis 
             stroke={colors[1]} 
             type="number"
@@ -99,7 +101,7 @@ const CustomTooltip = ({ payload, label, active }) => {
             <span className="color" style={{'backgroundColor': el.color}}/>
             <div>
               <h6>{`${el.name}`}</h6>
-              <p>{el.dataKey === 'totalweight' ? (el.value > 0 ? `${el.value} g` : 'N/A') : `${el.value.toFixed(2)}`}</p>
+              <p>{el.dataKey === 'totalWithoutHose' ? (el.value > 0 ? `${el.value} g` : 'N/A') : `${parseFloat(el.value).toFixed(2)}`}</p>
             </div>
           </div>
         )}
@@ -109,12 +111,30 @@ const CustomTooltip = ({ payload, label, active }) => {
   return null;
 }
 
+const CustomizedTick = ( {x, y, payload} ) => {
+  const custom = payload.value.indexOf(' (custom)') !== -1;
+  const label = custom ? payload.value.replace(' (custom)', '') : payload.value;
+  return (
+    <Text 
+      angle={-35}
+      x={x}
+      y={y}
+      textAnchor="end"
+      verticalAnchor="middle"
+      fill={custom ? '#ff2b2b' : '#fff'} 
+      fontSize={12}
+      width={135}
+    >
+      {label}
+    </Text>
+  )
+}
+
 const getPath = (x, y, width, height) => {
   return `M ${x},${y} h ${width} v ${height} h ${-width} Z`;
 };
 
-const CustomBar = (props) => {
-  const { background, x, fill, y, height, payload } = props;
+const CustomBar = ({ background, x, fill, y, height, payload }) => {
   //manual width calculation, it's dirty, but needed to get better chart scaling, allowing data overflow without clipping, and stacked bars starting from 0
   const theElement = standardElements.find( el => el.color === fill);
   const newWidth = payload[theElement.variable] * (background.width / chartDomain[1]);
@@ -124,8 +144,7 @@ const CustomBar = (props) => {
     />;
 };
 
-const CustomLegend = (props) => {
-  const { payload } = props;
+const CustomLegend = ({ payload }) => {
   const payloadOrdered = payload.sort((a,b) => (a.dataKey > b.dataKey) ? 1 : ((b.dataKey > a.dataKey) ? -1 : 0)); 
   return (
     <div className="legend">
