@@ -5,8 +5,6 @@ import { calculateHydro, calculateMechAvg, calculateMechPeak, calculateTotalAvg,
 
 export const getBrakes = async (store, request = axios) => {
   const url = googleUrl + sheetId + '/values/' + sheetPage + '?key=' + process.env.REACT_APP_API_KEY;
-  const status = "LOADING";
-  store.setState({ status });
   try {
     const response = await request.get(url);
     const responseObj = response.data && response.data.values && response.data.values.map( 
@@ -21,9 +19,7 @@ export const getBrakes = async (store, request = axios) => {
         });
     });
 
-    const status = responseObj ? "EMPTY" : "SUCCESS";
-    store.setState({ status });
-
+    const status = responseObj.length === 0 ? "EMPTY" : "SUCCESS";
     const data = responseObj.length > 0 ? responseObj.filter( d => d.oil === 'DOT' || d.oil === 'Mineral' ) : [];
     const brakes = data.map( ( b, i ) => Object.assign({
       id: `std-brake-${i}`,
@@ -45,8 +41,9 @@ export const getBrakes = async (store, request = axios) => {
     const calipers = brakes.filter( (thing, index, self) =>
       thing.slave1 > 0 && index === self.findIndex( t => t.caliper === thing.caliper )
     );
+    store.setState({ brakes, levers, calipers, status });
 
-    store.setState({ brakes, levers, calipers });
+    return store;
   }
   catch (error) {
     console.log(error);
@@ -58,7 +55,6 @@ export const getBrakes = async (store, request = axios) => {
 
 export const toggleElement = (store, element, stateSelector) => {
   const nextElements = store.state[stateSelector].map( el => {
-    console.log(el)
     if ( element.hasOwnProperty('id') && el.id !== element.id ) return el;
     if ( el.variable !== element.variable ) return el;
     return {
@@ -66,11 +62,11 @@ export const toggleElement = (store, element, stateSelector) => {
       show: !el.show,
     }
   });
-  store.setState({[stateSelector]: nextElements});
+  store.setState({ [stateSelector]: nextElements });
 }
 
 export const changeValue = (store, type, val) => {
-  type === 'lever' ? store.setState({customLever:val}) : store.setState({customCaliper:val});
+  type === 'lever' ? store.setState({ customLever: val }) : store.setState({ customCaliper: val });
 }
 
 export const addToBrakes = (store) => {
@@ -90,7 +86,7 @@ export const addToBrakes = (store) => {
       custom: true,
     };
     const customBrakes = [...store.state.customBrakes, newBrake];
-    store.setState({ customBrakes, customCaliper:[], customLever:[] });
+    store.setState({ customBrakes, customCaliper: [], customLever: [] });
   }
 }
 

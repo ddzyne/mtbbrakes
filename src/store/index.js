@@ -1,11 +1,11 @@
-import React from "react";
+import React from 'react';
 import useGlobalHook from "use-global-hook";
 
 import * as actions from "../actions";
 
-import {standardElements, secondaryElements} from '../datasets/default';
+import { standardElements, secondaryElements } from '../datasets/default';
 
-const initialState = {
+export const initialState = {
   brakes: [],
   elements: standardElements,
   secondaryElements: secondaryElements,

@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Label, Text } from 'recharts';
 import Loader from './Loader';
 import { standardElements, chartDomain, colors } from '../datasets/default';
-import {ElementSelector} from './Selectors';
-import {Sort} from './Input';
+import { ElementSelector } from './Selectors';
+import { Sort } from './Input';
 import useGlobal from "../store";
 
 const Chart = (props) => {
@@ -111,8 +111,8 @@ const CustomTooltip = ({ payload, label, active }) => {
   return null;
 }
 
-const CustomizedTick = ( {x, y, payload} ) => {
-  const custom = payload.value.indexOf(' (custom)') !== -1;
+const CustomizedTick = ({ x, y, payload }) => {
+  const custom = payload.value.toString().indexOf(' (custom)') !== -1;
   const label = custom ? payload.value.replace(' (custom)', '') : payload.value;
   return (
     <Text 

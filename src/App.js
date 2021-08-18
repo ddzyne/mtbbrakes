@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
 import useGlobal from "./store";
 import Chart from './components/Chart';
 import { Selector } from './components/Selectors';
@@ -14,13 +14,25 @@ const App = () => {
     globalActions.getBrakes();
   }, [globalActions]);
 
-  const { brakes, levers, calipers, elements, secondaryElements, customBrakes, customLever, customCaliper, status } = globalState;
+  const { 
+    brakes, 
+    levers, 
+    calipers, 
+    elements, 
+    secondaryElements, 
+    customBrakes, 
+    customLever, 
+    customCaliper, 
+    status,
+  } = globalState;
 
   const visibleBrakes = brakes.filter( b => 
-    ( !isNaN(b.levMecAvg) && isFinite(b.levMecAvg)) &&
-    ( !isNaN(b.levHyd) && isFinite(b.levHyd)) );
+    ( !isNaN(b.levMecAvg) && isFinite(b.levMecAvg) ) &&
+    ( !isNaN(b.levHyd) && isFinite(b.levHyd) ) 
+  );
 
-  const elementsOrdered = [...elements].sort((a,b) => (a.variable > b.variable) ? 1 : ((b.variable > a.variable) ? -1 : 0)); 
+  const elementsOrdered = [...elements].sort((a,b) => (a.variable > b.variable) ? 1 : ((b.variable > a.variable) ? -1 : 0));
+
   return (
     <div className="App">
       <div className="left">
