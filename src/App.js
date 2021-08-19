@@ -37,14 +37,15 @@ const App = () => {
     <div className="App">
       <div className="left">
         <Intro />
+        <Copyright className="show-for-large" />
+      </div>
+      <div className="right">
         <Chart 
           data={visibleBrakes} 
           customData={customBrakes} 
           elements={elements} 
           secondaryElements={secondaryElements}
           loading={status === 'LOADING'} />
-      </div>
-      <div className="right">
         <div className="sidebar">
           <div className="mixmatch">
             <CustomBuilder 
@@ -72,10 +73,10 @@ const App = () => {
             secondaryElements={secondaryElements}
             toggleData={globalActions.toggleElement}
             stateSelector="elements"
-            secondaryStateSelector="secondaryElements" /> 
+            secondaryStateSelector="secondaryElements" />
         </div>
-        <Copyright/>
       </div>
+      <Copyright className="hide-for-large" />
     </div>
   )
 }

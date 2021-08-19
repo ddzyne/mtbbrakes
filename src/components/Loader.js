@@ -1,15 +1,18 @@
 import React from 'react';
-import posed, {PoseGroup} from 'react-pose';
+import { motion, AnimatePresence } from 'framer-motion';
 
-const Loader = (props) => (
-  <PoseGroup>
-    {props.loading && 
-      <LoaderPosed className={`loader ${props.position}`} key="loading">
+export const FadeLoader = (props) =>
+  <AnimatePresence>
+    {props.loading &&
+      <motion.div
+        initial={{opacity: 0 }}
+        animate={{opacity: 1 }}
+        exit={{opacity: 0 }}
+        className={`loader ${props.className}`}>
         <Spinner />
-      </LoaderPosed>
+      </motion.div>
     }
-  </PoseGroup>
-);
+  </AnimatePresence>
 
 const Spinner = props => (
   <svg
@@ -22,10 +25,3 @@ const Spinner = props => (
     <circle className="path" fill="none" cx={30} cy={30} r={27} />
   </svg>
 );
-
-export default Loader;
-
-const LoaderPosed = posed.div({
-  enter: { opacity: 1 },
-  exit: { opacity: 0 }
-})

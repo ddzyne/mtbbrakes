@@ -15,7 +15,7 @@ export const Intro = (props) => {
 
 export const Copyright = (props) => {
   return (
-    <div className="copyright">
+    <div className={`copyright ${props.className}`}>
       <h4>Copyrights</h4>
       <p>Brake data collected by<br/><a href="https://ridemonkey.bikemag.com/threads/frankenbrakes-and-brake-improvement-discussion.274164/" target="_blank" rel="noopener noreferrer">Udi on RideMonkey</a></p>
       <p>Visualisation tool created by<br/><a href="https://ddzyne.nl" target="_blank" rel="noopener noreferrer">Ddzyne</a></p>

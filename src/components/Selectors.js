@@ -1,11 +1,11 @@
 import React from 'react';
-import Loader from './Loader';
+import { FadeLoader } from './Loader';
 
 export const Selector = (props) => {
   return (
     <div className="selector-wrap">
       {props.title && <h2>{props.title}</h2>}
-      <Loader loading={props.loading} />
+      <FadeLoader loading={props.loading} className="absolute" />
       {props.elements && props.elements.map( (el, i) => {
         const name = el.name.toString().indexOf(' (custom)') !== -1 ? el.name.replace(' (custom)', '') : el.name;
         return (

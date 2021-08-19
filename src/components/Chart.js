@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Label, Text } from 'recharts';
-import Loader from './Loader';
+import { FadeLoader } from './Loader';
 import { standardElements, chartDomain, colors } from '../datasets/default';
 import { ElementSelector } from './Selectors';
 import { Sort } from './Input';
@@ -15,7 +15,7 @@ const Chart = (props) => {
   const dataOrdered = sortBy !== '' ? [...fullData].sort((a,b) => (a[sortBy] > b[sortBy]) ? 1 : ((b[sortBy] > a[sortBy]) ? -1 : 0)) : fullData; 
   return (
     <div className="chart-wrap">
-      <Loader loading={loading} position="absolute"/>
+      <FadeLoader loading={loading} className="loader absolute"/>
       <Sort />
       <ResponsiveContainer width="100%" height={1200}>
         <BarChart
