@@ -32,7 +32,7 @@ export const getBrakes = async (store, request = axios) => {
       levTotMax: -1 * ( calculateTotalPeak(b,b) > 0 ? calculateTotalPeak(b,b) : calculateTotalAvg(b,b) ),
       show: true,
       custom: false,
-    }, b ));
+    }, b )).sort( (a, b) => a.name > b.name );
 
     const levers = brakes.filter( (thing, index, self) =>
       thing.mechanicalLeverageAverage > 0 && index === self.findIndex( t => t.lever === thing.lever )

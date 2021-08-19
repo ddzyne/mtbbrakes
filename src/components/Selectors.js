@@ -7,10 +7,11 @@ export const Selector = (props) => {
       {props.title && <h2>{props.title}</h2>}
       <Loader loading={props.loading} />
       {props.elements && props.elements.map( (el, i) => {
+        const name = el.name.toString().indexOf(' (custom)') !== -1 ? el.name.replace(' (custom)', '') : el.name;
         return (
           <ElementSelector 
             key={i}
-            name={el.name} 
+            name={name} 
             onClick={props.toggleData.bind(this, el, props.stateSelector)}
             visible={el.show}/>
         )}

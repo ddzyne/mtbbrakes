@@ -92,10 +92,11 @@ export default Chart;
 
 const CustomTooltip = ({ payload, label, active }) => {
   const payloadOrdered = payload.sort((a,b) => (a.dataKey > b.dataKey) ? 1 : ((b.dataKey > a.dataKey) ? -1 : 0)); 
+  const name = label ? ( label.toString().indexOf(' (custom)') !== -1 ? label.replace(' (custom)', '') : label ) : '';
   if (active) {
     return (
       <div className="custom-tooltip">
-        <h4 className="label">{label ? `${label}` : ''}</h4>
+        <h4 className="label">{name}</h4>
         {payloadOrdered && payloadOrdered.map( (el, i) =>
           <div key={i} className="item-wrap">
             <span className="color" style={{'backgroundColor': el.color}}/>
@@ -138,10 +139,12 @@ const CustomBar = ({ background, x, fill, y, height, payload }) => {
   //manual width calculation, it's dirty, but needed to get better chart scaling, allowing data overflow without clipping, and stacked bars starting from 0
   const theElement = standardElements.find( el => el.color === fill);
   const newWidth = payload[theElement.variable] * (background.width / chartDomain[1]);
-  return <path 
-    fill={fill}
-    d={getPath(x > background.x ? background.x : x,y,newWidth,height)}
-    />;
+  return (
+    <path 
+      fill={fill}
+      d={getPath(x > background.x ? background.x : x,y,newWidth,height)}
+    />
+  )
 };
 
 const CustomLegend = ({ payload }) => {
