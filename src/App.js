@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { useMediaQuery } from 'react-responsive';
 import useGlobal from "./store";
 import Chart from './components/Chart';
 import { Selector } from './components/Selectors';
@@ -9,6 +10,7 @@ import './App.scss';
 
 const App = () => {
   const [globalState, globalActions] = useGlobal();
+  const isLarge = useMediaQuery({ query: '(min-width: 1200px)' });
 
   useEffect(() => {
     globalActions.getBrakes();
@@ -31,13 +33,11 @@ const App = () => {
     ( !isNaN(b.levHyd) && isFinite(b.levHyd) ) 
   );
 
-  const elementsOrdered = [...elements].sort((a,b) => (a.variable > b.variable) ? 1 : ((b.variable > a.variable) ? -1 : 0));
-
   return (
     <div className="App">
       <div className="left">
         <Intro />
-        <Copyright className="show-for-large" />
+        { isLarge && <Copyright /> }
       </div>
       <div className="right">
         <Chart 
@@ -67,16 +67,9 @@ const App = () => {
             toggleData={globalActions.toggleElement}
             stateSelector="brakes" 
             loading={status === 'LOADING'}/>
-          <Selector 
-            title="Show/hide data" 
-            elements={elementsOrdered} 
-            secondaryElements={secondaryElements}
-            toggleData={globalActions.toggleElement}
-            stateSelector="elements"
-            secondaryStateSelector="secondaryElements" />
         </div>
       </div>
-      <Copyright className="hide-for-large" />
+      { !isLarge && <Copyright /> }
     </div>
   )
 }

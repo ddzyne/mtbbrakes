@@ -23,20 +23,6 @@ strong {
   }
 }
 
-.show-for-large {
-  display: none;
-  @media only screen and (min-width: 1200px) {
-    display: block;
-  }
-}
-
-.hide-for-large {
-  @media only screen and (min-width: 1200px) {
-    display: none;
-  }
-}
-
-
 .block {
   background: $black;
   padding:1rem 1.5rem;
@@ -425,12 +411,20 @@ input {
   .item {
     display: flex;
     align-items:center;
-    margin:.25rem .5rem;
-    .color {
-      width: .8rem;
-      height: .8rem;
-      margin-right: .25rem;
-      border-radius:3px;
+    margin:.25rem;
+    cursor: pointer;
+    padding: .25rem .5rem;
+    border-radius: 3px;
+    transition: all .1s ease;
+    &:hover {
+      opacity: 0.5;
+      transform: translate3d(0, -2px, 0px);
+    }
+    &.disabled {
+      opacity: 0.4;
+      &:hover {
+        opacity: 0.9;
+      }
     }
   }
 }

@@ -1,16 +1,17 @@
 import React, { useState } from 'react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Label, Text } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Label, Text, Rectangle } from 'recharts';
 import { FadeLoader } from './Loader';
 import { standardElements, chartDomain, colors } from '../datasets/default';
 import { ElementSelector } from './Selectors';
 import { Sort } from './Input';
 import useGlobal from "../store";
+// import { motion } from 'framer-motion';
 
 const Chart = (props) => {
-  const [globalState] = useGlobal();
-  const [stacked, setStacked] = useState(true);
-  const {sortBy} = globalState;
-  const {data, elements, secondaryElements, loading} = props;
+  const [ globalState ] = useGlobal();
+  const [ stacked, setStacked ] = useState(true);
+  const { sortBy } = globalState;
+  const { data, elements, secondaryElements, loading } = props;
   const fullData = data.concat(props.customData).filter( d => d.show );
   const dataOrdered = sortBy !== '' ? [...fullData].sort((a,b) => (a[sortBy] > b[sortBy]) ? 1 : ((b[sortBy] > a[sortBy]) ? -1 : 0)) : fullData; 
   return (
@@ -53,8 +54,7 @@ const Chart = (props) => {
           </XAxis>
           <Tooltip cursor={{fill: 'rgba(255,255,255,.3)'}} content={<CustomTooltip/>} />
           <Legend content={<CustomLegend/>}/>
-          {elements.map( (el) =>
-            el.show && 
+          {elements.map( (el) => ( 
             <Bar 
               stackId={stacked ? 'a' :
                 (el.variable === 'levMecPeak' || el.variable === 'levMecAvg' ? 'a' :
@@ -64,19 +64,23 @@ const Chart = (props) => {
               dataKey={el.variable} 
               name={el.name} 
               fill={el.color}
+              hide={!el.show}
               shape={<CustomBar/>}
               xAxisId="top"
               barSize={secondaryElements.find(e => e.show) ? 25 : null} />
+            )
           )}
-          {secondaryElements.map( (el) =>
-            el.show &&
+          {secondaryElements.map( (el) =>  (
             <Bar 
               key={el.variable} 
               dataKey={el.variable}
               name={el.longName ? el.longName : el.name}
               fill={el.color}
+              hide={!el.show}
+              shape={<RoundedBar/>}
               xAxisId="bottom"
               barSize={elements.find(e => e.show) ? 10 : null} />
+            )
           )}
         </BarChart>
       </ResponsiveContainer>
@@ -131,30 +135,70 @@ const CustomizedTick = ({ x, y, payload }) => {
   )
 }
 
-const getPath = (x, y, width, height) => {
-  return `M ${x},${y} h ${width} v ${height} h ${-width} Z`;
+// const getPath = (x, y, width, height) => {
+//   return `M ${x},${y} h ${width} v ${height} h ${-width} Z`;
+//   // const totalWidth = x + width;
+//   // return `M ${x},${y}
+//   //   L ${totalWidth-3},${y}
+//   //   A 3,3,0,0,1,${totalWidth},${y+3}
+//   //   L ${totalWidth},${y+height-3}
+//   //   A 3,3,0,0,1,${totalWidth-3},${y+height}
+//   //   L ${x},${y+height}
+//   //   Z`;
+// };
+
+const CustomBar = ({ background, x, fill, y, height, payload, hide }) => {
+  // Manual width calculation, it's dirty, but needed to get better chart scaling, 
+  // allowing data overflow without clipping, and stacked bars starting from 0.
+  // Unfortunately disables the bar animations.
+  const theElement = standardElements.find( el => el.color === fill);
+  const newWidth = payload[theElement.variable] * (background.width / chartDomain[1]) || 0;
+  return (
+    // <motion.path
+    //   initial={{ x: -1200 }}
+    //   animate={{ x: [null, 0] }}
+    //   exit={{ x: -1200 }}
+    //   transition={{ duration: 0.2, x: { type: "spring", stiffness: 10 }, }}
+    //   fill={fill}
+    //   d={getPath(x > background.x ? background.x : x, y, newWidth, height)}/ >
+    <Rectangle 
+      fill={fill}
+      x={x > background.x ? background.x : x}
+      y={y}
+      height={height}
+      width={newWidth}
+      radius={[0, 3, 3, 0]}
+    />
+  )
 };
 
-const CustomBar = ({ background, x, fill, y, height, payload }) => {
-  //manual width calculation, it's dirty, but needed to get better chart scaling, allowing data overflow without clipping, and stacked bars starting from 0
-  const theElement = standardElements.find( el => el.color === fill);
-  const newWidth = payload[theElement.variable] * (background.width / chartDomain[1]);
+const RoundedBar = ({ x, fill, y, height, width }) => {
   return (
-    <path 
+    <Rectangle 
       fill={fill}
-      d={getPath(x > background.x ? background.x : x,y,newWidth,height)}
+      x={x}
+      y={y}
+      height={height}
+      width={width}
+      radius={[0, 3, 3, 0]}
     />
   )
 };
 
 const CustomLegend = ({ payload }) => {
-  const payloadOrdered = payload.sort((a,b) => (a.dataKey > b.dataKey) ? 1 : ((b.dataKey > a.dataKey) ? -1 : 0)); 
+  const [globalState, globalActions] = useGlobal();
+  const payloadOrdered = payload.sort((a,b) => (a.value > b.value) ? 1 : ((b.value > a.value) ? -1 : 0)); 
   return (
     <div className="legend">
       {
         payloadOrdered.map((entry, index) => (
-          <span className="item" key={`item-${index}`}>
-            <span className="color" style={{'backgroundColor': entry.color}}/>
+          <span 
+            className={`item ${entry.inactive ? 'disabled' : 'enabled'}`} 
+            key={`item-${index}`}
+            style={{'backgroundColor': entry.color}}
+            onClick={() => 
+              globalActions.toggleElement(entry, entry.value.toLowerCase().includes('weight') ? 'secondaryElements' : 'elements')}
+          >
             <span className="label">{entry.value}</span>
           </span>
         ))
