@@ -14,6 +14,7 @@ const Chart = (props) => {
   const { data, elements, secondaryElements, loading } = props;
   const fullData = data.concat(props.customData).filter( d => d.show );
   const dataOrdered = sortBy !== '' ? [...fullData].sort((a,b) => (a[sortBy] > b[sortBy]) ? 1 : ((b[sortBy] > a[sortBy]) ? -1 : 0)) : fullData; 
+  console.log(fullData)
   return (
     <div className="chart-wrap">
       <FadeLoader loading={loading} className="loader absolute"/>
@@ -21,7 +22,7 @@ const Chart = (props) => {
       <ResponsiveContainer width="100%" height={1200}>
         <BarChart
           data={dataOrdered}
-          margin={{top: 10, right: 0, left: 0, bottom: 0,}}
+          margin={{top: 10, right: 0, left: 0, bottom: 0}}
           barGap={0}
           layout="vertical"
           barCategoryGap="15%">
@@ -56,18 +57,18 @@ const Chart = (props) => {
           <Legend content={<CustomLegend/>}/>
           {elements.map( (el) => ( 
             <Bar 
-              stackId={stacked ? 'a' :
-                (el.variable === 'levMecPeak' || el.variable === 'levMecAvg' ? 'a' :
-                (el.variable === 'levTotPeak' || el.variable === 'levTotAvg' ? 'b' : null ))
-              } 
+              // stackId={stacked ? 'a' :
+              //   (el.variable === 'levMecPeak' || el.variable === 'levMecAvg' ? 'a' :
+              //   (el.variable === 'levTotPeak' || el.variable === 'levTotAvg' ? 'b' : null ))
+              // } 
               key={el.variable} 
               dataKey={el.variable} 
               name={el.name} 
               fill={el.color}
               hide={!el.show}
-              shape={<CustomBar/>}
+              shape={<CustomBar otherVisible={ secondaryElements.find(e => e.show) ? true : false } />}
               xAxisId="top"
-              barSize={secondaryElements.find(e => e.show) ? 25 : null} />
+              barSize={ 0 }/>
             )
           )}
           {secondaryElements.map( (el) =>  (
@@ -77,17 +78,17 @@ const Chart = (props) => {
               name={el.longName ? el.longName : el.name}
               fill={el.color}
               hide={!el.show}
-              shape={<RoundedBar/>}
+              shape={<RoundedBar otherVisible={ elements.find(e => e.show) ? true : false } />}
               xAxisId="bottom"
-              barSize={elements.find(e => e.show) ? 10 : null} />
+              barSize={elements.find(e => e.show) ? 10 : 35} />
             )
           )}
         </BarChart>
       </ResponsiveContainer>
-      <ElementSelector 
+      {/*<ElementSelector 
           name={stacked ? "Unstack bars" : "Stack bars" }
           onClick={()=>setStacked(!stacked)}
-          visible={stacked}/>
+          visible={stacked}/>*/}
     </div>
   )
 }
@@ -147,10 +148,10 @@ const CustomizedTick = ({ x, y, payload }) => {
 //   //   Z`;
 // };
 
-const CustomBar = ({ background, x, fill, y, height, payload, hide }) => {
+const CustomBar = ({ background, x, fill, y, height, width, payload, hide, otherVisible }) => {
   // Manual width calculation, it's dirty, but needed to get better chart scaling, 
   // allowing data overflow without clipping, and stacked bars starting from 0.
-  // Unfortunately disables the bar animations.
+  // Unfortunately disables the bar animations... Removed for now, with removed unstack bar fn.
   const theElement = standardElements.find( el => el.color === fill);
   const newWidth = payload[theElement.variable] * (background.width / chartDomain[1]) || 0;
   return (
@@ -164,20 +165,21 @@ const CustomBar = ({ background, x, fill, y, height, payload, hide }) => {
     <Rectangle 
       fill={fill}
       x={x > background.x ? background.x : x}
-      y={y}
-      height={height}
-      width={newWidth}
+      y={otherVisible ? y - 10 : y - 17}
+      height={otherVisible ? 25 : 35}
+      // width={newWidth}
+      width={width}
       radius={[0, 3, 3, 0]}
     />
   )
 };
 
-const RoundedBar = ({ x, fill, y, height, width }) => {
+const RoundedBar = ({ x, fill, y, height, width, otherVisible }) => {
   return (
     <Rectangle 
       fill={fill}
       x={x}
-      y={y}
+      y={otherVisible ? y + 15 : y}
       height={height}
       width={width}
       radius={[0, 3, 3, 0]}

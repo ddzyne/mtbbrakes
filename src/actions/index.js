@@ -30,6 +30,8 @@ export const getBrakes = async (store, request = axios) => {
       levTotAvg: calculateTotalAvg(b,b),
       ...( calculateTotalPeak(b,b) > 0 && {levTotPeak: calculateTotalPeak(b,b)}),
       levTotMax: -1 * ( calculateTotalPeak(b,b) > 0 ? calculateTotalPeak(b,b) : calculateTotalAvg(b,b) ),
+      levHydSort: -1 * calculateHydro(b, b),
+      levMecSort: -1 * ( calculateMechPeak(b) > 0 ? calculateMechPeak(b) : calculateMechAvg(b) ),
       show: true,
       custom: false,
     }, b )).sort( (a, b) => a.name > b.name );
@@ -82,6 +84,8 @@ export const addToBrakes = (store) => {
       levTotAvg: calculateTotalAvg(customCaliper,customLever),
       levTotPeak: calculateTotalPeak(customCaliper,customLever),
       levTotMax: -1 * ( calculateTotalPeak(customCaliper,customLever) > 0 ? calculateTotalPeak(customCaliper,customLever) : calculateTotalAvg(customCaliper,customLever) ),
+      levHydSort: -1 * calculateHydro(customCaliper, customLever),
+      levMecSort: -1 * ( calculateMechPeak(customLever) > 0 ? calculateMechPeak(customLever) : calculateMechAvg(customLever) ),
       show: true,
       custom: true,
     };

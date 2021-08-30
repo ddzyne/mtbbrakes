@@ -17,4 +17,6 @@ export const secondaryElements = [
 export const sortBy = [
   {name: 'Strongest brake first', variable: 'levTotMax'},
   {name: 'Lightest brake first', variable: 'totalWithoutHose'},
+  {name: 'Highest hydraulic leverage first', variable: 'levHydSort'},
+  {name: 'Highest mechanical leverage first', variable: 'levMecSort'},
 ];
