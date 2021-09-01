@@ -88,6 +88,7 @@ export const addToBrakes = (store) => {
       levMecSort: -1 * ( calculateMechPeak(customLever) > 0 ? calculateMechPeak(customLever) : calculateMechAvg(customLever) ),
       show: true,
       custom: true,
+      oilCompatible: customCaliper.oil === customLever.oil,
     };
     const customBrakes = [...store.state.customBrakes, newBrake];
     store.setState({ customBrakes, customCaliper: [], customLever: [] });

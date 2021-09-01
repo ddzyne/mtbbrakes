@@ -1,20 +1,21 @@
 import React, { useState } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Label, Text, Rectangle } from 'recharts';
 import { FadeLoader } from './Loader';
-import { standardElements, chartDomain, colors } from '../datasets/default';
-import { ElementSelector } from './Selectors';
+import { /*standardElements, */ chartDomain, colors } from '../datasets/default';
+// import { ElementSelector } from './Selectors';
 import { Sort } from './Input';
 import useGlobal from "../store";
 // import { motion } from 'framer-motion';
 
 const Chart = (props) => {
   const [ globalState ] = useGlobal();
-  const [ stacked, setStacked ] = useState(true);
+  // const [ stacked, setStacked ] = useState(true);
   const { sortBy } = globalState;
   const { data, elements, secondaryElements, loading } = props;
   const fullData = data.concat(props.customData).filter( d => d.show );
-  const dataOrdered = sortBy !== '' ? [...fullData].sort((a,b) => (a[sortBy] > b[sortBy]) ? 1 : ((b[sortBy] > a[sortBy]) ? -1 : 0)) : fullData; 
-  console.log(fullData)
+  const dataOrdered = sortBy !== '' ? 
+    [...fullData].sort((a,b) => (a[sortBy] > b[sortBy]) ? 1 : ((b[sortBy] > a[sortBy]) ? -1 : 0)) : 
+    fullData; 
   return (
     <div className="chart-wrap">
       <FadeLoader loading={loading} className="loader absolute"/>
@@ -152,8 +153,8 @@ const CustomBar = ({ background, x, fill, y, height, width, payload, hide, other
   // Manual width calculation, it's dirty, but needed to get better chart scaling, 
   // allowing data overflow without clipping, and stacked bars starting from 0.
   // Unfortunately disables the bar animations... Removed for now, with removed unstack bar fn.
-  const theElement = standardElements.find( el => el.color === fill);
-  const newWidth = payload[theElement.variable] * (background.width / chartDomain[1]) || 0;
+  // const theElement = standardElements.find( el => el.color === fill);
+  // const newWidth = payload[theElement.variable] * (background.width / chartDomain[1]) || 0;
   return (
     // <motion.path
     //   initial={{ x: -1200 }}

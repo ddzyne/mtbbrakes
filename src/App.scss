@@ -196,6 +196,11 @@ p {
     width: 8rem;
     line-height: 1;
     color:$white;
+    padding: 0;
+    font-size: 0.9rem;
+  }
+  &.selected {
+    background: $green;
   }
 }
 
@@ -247,16 +252,23 @@ p {
   }
 }
 .sort-by.react-dropdown-select {
-  width: 13rem !important;
+  width: 17rem !important;
   margin:0;
-  padding:0 !important;
-  height: auto !important;
-  min-height:0;
-  border:0;
-  border-bottom:1px dashed $white;
+  // padding:0 !important;
+  // height: auto !important;
+  // min-height:0;
+  // border:0;
+  // border-bottom:1px dashed $white;
   .react-dropdown-select-dropdown {
     width: 100%;
-    padding:.25rem 0;
+
+    .react-dropdown-select-item-selected {
+      background: $green;
+    }
+  }
+  .react-dropdown-select-content {
+    font-size: 0.9rem;
+    padding:.2rem .4rem;
   }
 }
 
@@ -270,18 +282,24 @@ p {
 }
 .react-dropdown-select-item {
   border-bottom:0 !important;
+  font-size: 0.9rem;
+
+  &:hover {
+    background: $black !important;
+  }
 }
 
-.sort-drop {
-  padding:0;
-  font-size: .8rem;
-  .label {
-    padding:.2rem .4rem;
-  }
-  input.label {
-    padding:.2rem 0;
-  }
-}
+// .sort-drop {
+//   padding:.5rem .6rem;
+//   .label {
+//     padding:.2rem .4rem;
+//     font-size: 0.9rem;
+//   }
+//   input.label {
+//     padding: 0;
+//     line-height: 1;
+//   }
+// }
 
 input {
   color:$white;
@@ -321,8 +339,21 @@ input {
 .selector {
   display: flex;
   cursor: pointer;
-  margin:5px 0;
+  // margin:5px 0;
   align-items: center;
+  margin: 0 -1.5rem;
+  padding: 0.3rem 1.5rem;
+  &:hover {
+    background: lighten($black, 5%);
+  }
+}
+.incompatible {
+  margin-left:1rem;
+  border-radius:3px;
+  padding:.1rem .2rem;
+  color:$black;
+  font-size: .6rem;
+  background:#e53935;
 }
 
 .tgl-btn {
@@ -404,6 +435,7 @@ input {
 //legend
 .legend {
   margin-top: 2rem;
+  margin-bottom: 0.25rem;
   display: flex;
   flex-wrap: wrap;
   font-size: .8rem;

@@ -13,7 +13,9 @@ export const Selector = (props) => {
             key={i}
             name={name} 
             onClick={props.toggleData.bind(this, el, props.stateSelector)}
-            visible={el.show}/>
+            visible={el.show}
+            custom={props.stateSelector === 'customBrakes'}
+            oilCompatible={el.oilCompatible}/>
         )}
       )}
       {props.secondaryElements && props.secondaryElements.map( (el, i) => {
@@ -34,6 +36,7 @@ export const ElementSelector = (props) => {
     <div className={`tgl-flat selector ${props.visible ? 'visible' : 'hidden'}`} onClick={props.onClick}>
       <span className="tgl-btn"></span>
       <span className="label">{props.name}</span>
+      {props.custom && !props.oilCompatible && <span className="incompatible">Incompatible fluids</span>}
     </div>
   )
 }
