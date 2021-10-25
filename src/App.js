@@ -63,7 +63,13 @@ const App = () => {
           </div>  
           <Selector 
             title="Some standard brakes" 
-            elements={visibleBrakes} 
+            elements={visibleBrakes.filter( e => e.display === 'Y' )} 
+            toggleData={globalActions.toggleElement}
+            stateSelector="brakes" 
+            loading={status === 'LOADING'}/>
+          <Selector 
+            title="Older brakes" 
+            elements={visibleBrakes.filter( e => e.display !== 'Y' )} 
             toggleData={globalActions.toggleElement}
             stateSelector="brakes" 
             loading={status === 'LOADING'}/>
