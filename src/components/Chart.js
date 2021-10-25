@@ -15,7 +15,7 @@ const Chart = (props) => {
   const fullData = data.concat(props.customData).filter( d => d.show );
   const dataOrdered = sortBy !== '' ? 
     [...fullData].sort((a,b) => (a[sortBy] > b[sortBy]) ? 1 : ((b[sortBy] > a[sortBy]) ? -1 : 0)) : 
-    fullData; 
+    fullData;
   return (
     <div className="chart-wrap">
       <FadeLoader loading={loading} className="loader absolute"/>
@@ -54,7 +54,7 @@ const Chart = (props) => {
             orientation="bottom">
             <Label value="Weight per side without hose (g)" offset={0} position="bottom" />
           </XAxis>
-          <Tooltip cursor={{fill: 'rgba(255,255,255,.3)'}} content={<CustomTooltip/>} />
+          <Tooltip cursor={{fill: 'rgba(255,255,255,.3)'}} content={<CustomTooltip fullData={fullData} />} />
           <Legend content={<CustomLegend/>}/>
           {elements.map( (el) => ( 
             <Bar 
@@ -96,9 +96,10 @@ const Chart = (props) => {
 
 export default Chart;
 
-const CustomTooltip = ({ payload, label, active }) => {
+const CustomTooltip = ({ payload, label, active, fullData }) => {
   const payloadOrdered = payload.sort((a,b) => (a.dataKey > b.dataKey) ? 1 : ((b.dataKey > a.dataKey) ? -1 : 0)); 
   const name = label ? ( label.toString().indexOf(' (custom)') !== -1 ? label.replace(' (custom)', '') : label ) : '';
+  const allBrakeData = fullData.length > 0 && fullData.find( e => e.name === label );
   if (active) {
     return (
       <div className="custom-tooltip">
@@ -112,6 +113,14 @@ const CustomTooltip = ({ payload, label, active }) => {
             </div>
           </div>
         )}
+        {allBrakeData.notes &&
+          <div className="item-wrap">
+            <div>
+              <h6>Notes</h6>
+              <p>{allBrakeData.notes}</p>
+            </div>
+          </div>
+        }
       </div>
     );
   }

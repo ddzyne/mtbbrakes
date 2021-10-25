@@ -32,7 +32,7 @@ export const getBrakes = async (store, request = axios) => {
       levTotMax: -1 * ( calculateTotalPeak(b,b) > 0 ? calculateTotalPeak(b,b) : calculateTotalAvg(b,b) ),
       levHydSort: -1 * calculateHydro(b, b),
       levMecSort: -1 * ( calculateMechPeak(b) > 0 ? calculateMechPeak(b) : calculateMechAvg(b) ),
-      show: true,
+      show: b.display === 'Y',
       custom: false,
     }, b )).sort( (a, b) => a.name > b.name );
 
