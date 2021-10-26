@@ -3,7 +3,6 @@ import Select from 'react-dropdown-select';
 import { sortBy } from '../datasets/default';
 import useGlobal from "../store";
 
-
 export const CustomBuilder = (props) => 
   <div className="selector-wrap">
     <h2>{props.title}</h2>

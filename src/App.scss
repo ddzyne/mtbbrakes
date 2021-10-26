@@ -31,15 +31,10 @@ strong {
 }
 
 .sidebar {
-  @extend .block;
   @media only screen and (min-width: 800px) {
     p {
-      max-width: 240px;
+      max-width: 280px;
     }
-  }
-  & > .selector-wrap {
-    min-height: 8rem;
-    position: relative;
   }
 }
 
@@ -86,6 +81,7 @@ p {
 
 .intro {
   @extend .block;
+  overflow: hidden;
   h5 {
     margin-bottom: .3rem;
     color:#979797;
@@ -93,6 +89,8 @@ p {
   .small {
     font-size: .8rem;
     color:#979797;
+    margin-bottom: 0;
+    padding-bottom: 1rem;
   }
   .hyd {
     color: #5c6bc0;
@@ -108,6 +106,29 @@ p {
   }
   .weight {
     color: #fbc02d;
+  }
+  .expand {
+    background: #000;
+    cursor: pointer;
+    font-size: 70%;
+    margin: 0 -1.5rem -1rem -1.5rem;
+    text-align: center;
+    padding: .5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    span {
+      margin-right: 1rem;
+    }
+    svg {
+      width: 1rem;
+      transition: all .2s ease;
+    }
+    &.collapsed {
+      svg {
+        transform: rotate(180deg);
+      }
+    }
   }
 }
 
@@ -170,11 +191,24 @@ p {
   }
 }
 
+.default-brakes {
+  @extend .block;
+  & > .selector-wrap {
+    min-height: 8rem;
+    position: relative;
+  }
+}
+
 //dropdown
 .mixmatch {
+  @extend .block;
+  border: 3px solid $green;
   flex:1;
-  .selector-wrap:first-of-type {
-    margin:0;
+  .selector-wrap {
+    margin: 0.5rem 0;
+    &:first-of-type {
+      margin:0;
+    }
   }
 }
 
@@ -326,8 +360,6 @@ input {
   flex-direction: column;
   & > div {
     margin-bottom: .5rem;
-    width: 50%;
-    width: 15rem;
   }
 }
 

@@ -36,7 +36,7 @@ const App = () => {
   return (
     <div className="App">
       <div className="left">
-        <Intro />
+        <Intro isLarge={isLarge} />
         { isLarge && <Copyright /> }
       </div>
       <div className="right">
@@ -49,7 +49,7 @@ const App = () => {
         <div className="sidebar">
           <div className="mixmatch">
             <CustomBuilder 
-              title="Mix & match brakes" 
+              title="Build your own brake" 
               levers={levers} 
               calipers={calipers} 
               addToBrakes={globalActions.addToBrakes}
@@ -60,19 +60,21 @@ const App = () => {
               elements={customBrakes} 
               toggleData={globalActions.toggleElement}
               stateSelector="customBrakes" />
-          </div>  
-          <Selector 
-            title="Some standard brakes" 
-            elements={visibleBrakes.filter( e => e.display === 'Y' )} 
-            toggleData={globalActions.toggleElement}
-            stateSelector="brakes" 
-            loading={status === 'LOADING'}/>
-          <Selector 
-            title="Older brakes" 
-            elements={visibleBrakes.filter( e => e.display !== 'Y' )} 
-            toggleData={globalActions.toggleElement}
-            stateSelector="brakes" 
-            loading={status === 'LOADING'}/>
+          </div>
+          <div class="default-brakes"> 
+            <Selector 
+              title="Some standard brakes" 
+              elements={visibleBrakes.filter( e => e.display === 'Y' )} 
+              toggleData={globalActions.toggleElement}
+              stateSelector="brakes" 
+              loading={status === 'LOADING'}/>
+            <Selector 
+              title="Older brakes" 
+              elements={visibleBrakes.filter( e => e.display !== 'Y' )} 
+              toggleData={globalActions.toggleElement}
+              stateSelector="brakes" 
+              loading={status === 'LOADING'}/>
+          </div>
         </div>
       </div>
       { !isLarge && <Copyright /> }
