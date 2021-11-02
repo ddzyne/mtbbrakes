@@ -1,15 +1,12 @@
 import React, { useState } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Label, Text, Rectangle } from 'recharts';
 import { FadeLoader } from './Loader';
-import { /*standardElements, */ chartDomain, colors } from '../datasets/default';
-// import { ElementSelector } from './Selectors';
+import { chartDomain, colors } from '../datasets/default';
 import { Sort } from './Input';
 import useGlobal from "../store";
-// import { motion } from 'framer-motion';
 
 const Chart = (props) => {
   const [ globalState ] = useGlobal();
-  // const [ stacked, setStacked ] = useState(true);
   const { sortBy } = globalState;
   const { data, elements, secondaryElements, loading } = props;
   const fullData = data.concat(props.customData).filter( d => d.show );
@@ -58,10 +55,6 @@ const Chart = (props) => {
           <Legend content={<CustomLegend/>}/>
           {elements.map( (el) => ( 
             <Bar 
-              // stackId={stacked ? 'a' :
-              //   (el.variable === 'levMecPeak' || el.variable === 'levMecAvg' ? 'a' :
-              //   (el.variable === 'levTotPeak' || el.variable === 'levTotAvg' ? 'b' : null ))
-              // } 
               key={el.variable} 
               dataKey={el.variable} 
               name={el.name} 
@@ -86,10 +79,6 @@ const Chart = (props) => {
           )}
         </BarChart>
       </ResponsiveContainer>
-      {/*<ElementSelector 
-          name={stacked ? "Unstack bars" : "Stack bars" }
-          onClick={()=>setStacked(!stacked)}
-          visible={stacked}/>*/}
     </div>
   )
 }
@@ -146,38 +135,13 @@ const CustomizedTick = ({ x, y, payload }) => {
   )
 }
 
-// const getPath = (x, y, width, height) => {
-//   return `M ${x},${y} h ${width} v ${height} h ${-width} Z`;
-//   // const totalWidth = x + width;
-//   // return `M ${x},${y}
-//   //   L ${totalWidth-3},${y}
-//   //   A 3,3,0,0,1,${totalWidth},${y+3}
-//   //   L ${totalWidth},${y+height-3}
-//   //   A 3,3,0,0,1,${totalWidth-3},${y+height}
-//   //   L ${x},${y+height}
-//   //   Z`;
-// };
-
 const CustomBar = ({ background, x, fill, y, height, width, payload, hide, otherVisible }) => {
-  // Manual width calculation, it's dirty, but needed to get better chart scaling, 
-  // allowing data overflow without clipping, and stacked bars starting from 0.
-  // Unfortunately disables the bar animations... Removed for now, with removed unstack bar fn.
-  // const theElement = standardElements.find( el => el.color === fill);
-  // const newWidth = payload[theElement.variable] * (background.width / chartDomain[1]) || 0;
   return (
-    // <motion.path
-    //   initial={{ x: -1200 }}
-    //   animate={{ x: [null, 0] }}
-    //   exit={{ x: -1200 }}
-    //   transition={{ duration: 0.2, x: { type: "spring", stiffness: 10 }, }}
-    //   fill={fill}
-    //   d={getPath(x > background.x ? background.x : x, y, newWidth, height)}/ >
     <Rectangle 
       fill={fill}
       x={x > background.x ? background.x : x}
       y={otherVisible ? y - 10 : y - 17}
       height={otherVisible ? 25 : 35}
-      // width={newWidth}
       width={width}
       radius={[0, 3, 3, 0]}
     />

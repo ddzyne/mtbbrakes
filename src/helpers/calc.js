@@ -1,7 +1,3 @@
-export function findItem(code, data) {
-  return data.find( (el) => el.code === code );
-}
-
 export function calculateHydro(caliper, lever) {
   const slaveArea = 2 * (Math.PI * Math.pow(caliper.slave1/2, 2) + Math.PI * Math.pow(caliper.slave2/2, 2));
   const masterArea = Math.PI * Math.pow(lever.master/2, 2);
