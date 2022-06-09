@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Label, Text, Rectangle } from 'recharts';
 import { FadeLoader } from './Loader';
-import { chartDomain, colors } from '../datasets/default';
+import { colors } from '../datasets/default';
 import { Sort } from './Input';
 import useGlobal from "../store";
 
@@ -10,6 +10,8 @@ const Chart = (props) => {
   const { sortBy } = globalState;
   const { data, elements, secondaryElements, loading } = props;
   const fullData = data.concat(props.customData).filter( d => d.show );
+  const strongestBrake = [...fullData].sort((a,b) => (a.levTotMax > b.levTotMax) ? 1 : ((b.levTotMax > a.levTotMax) ? -1 : 0))[0]
+  const chartDomain = [0, strongestBrake ? Math.floor( Math.abs(strongestBrake.levTotMax) / 10) * 10 + 10 : 50];
   const dataOrdered = sortBy !== '' ? 
     [...fullData].sort((a,b) => (a[sortBy] > b[sortBy]) ? 1 : ((b[sortBy] > a[sortBy]) ? -1 : 0)) : 
     fullData;
@@ -38,7 +40,7 @@ const Chart = (props) => {
             domain={chartDomain} 
             allowDataOverflow={true} 
             allowDecimals={false}
-            ticks={[0,10,20,30,40,50]}
+            ticks={ [ ...Array( chartDomain[1]/10 + 1 ) ].map( (c, i) => i * 10 ) }
             xAxisId="top" 
             orientation="top">
             <Label value="Leverage" offset={0} position="top" />

@@ -61,7 +61,7 @@ const App = () => {
               toggleData={globalActions.toggleElement}
               stateSelector="customBrakes" />
           </div>
-          <div class="default-brakes"> 
+          <div className="default-brakes"> 
             <Selector 
               title="Some standard brakes" 
               elements={visibleBrakes.filter( e => e.display === 'Y' )} 

@@ -1,7 +1,5 @@
 export const colors = ['#e53935', '#ff7043', '#00796b', '#26a69a', '#5c6bc0', '#fbc02d'];
 
-export const chartDomain = [0,50];
-
 export const standardElements = [
   {variable: 'levTotPeak', name: 'Total peak leverage', color: colors[0], show: true},
   {variable: 'levTotAvg', name: 'Total leverage', color: colors[1], show: true},
